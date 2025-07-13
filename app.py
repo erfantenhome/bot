@@ -237,4 +237,20 @@ def webhook():
                 phone = message_text.split(' ')[1]
                 response_text = fetch_and_save_vouchers(phone)
             except IndexError:
-                response_text = "Please provide a phone number. Usage: /check 09
+                response_text = "Please provide a phone number. Usage: /check 09123456789"
+
+        # This part sends the reply back to the user in Telegram
+        telegram_token = os.environ.get('TELEGRAM_TOKEN')
+        reply_payload = {'chat_id': chat_id, 'text': response_text}
+        reply_url = f"https://api.telegram.org/bot{telegram_token}/sendMessage"
+        with CurlSession() as s:
+            s.post(reply_url, json=reply_payload)
+
+    except Exception as e:
+        logging.error(f"Error processing update: {e}")
+        # The error will also be sent to Sentry automatically
+
+    return "OK", 200
+
+# This command runs once when the application starts on Render
+setup_database()
