@@ -1,0 +1,7 @@
+flask
+gunicorn
+sentry-sdk[flask]
+psycopg2-binary
+requests
+curl_cffi
+python-telegram-bot
